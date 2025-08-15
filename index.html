@@ -19,6 +19,10 @@
       --shadow: 0 4px 18px rgba(0,0,0,.08);
       --radius: 16px;
 
+      /* Botões simétricos */
+      --btn-h: 44px;
+      --btn-min: 140px;
+
       /* Cores do balão de respiração (calmas e contrastantes) */
       --breath-center:#FFFFFF;
       --breath-ring:#CFEAFC;     /* azul bem calmo */
@@ -43,30 +47,54 @@
 
     *{box-sizing:border-box}
     html,body{margin:0; padding:0; background:var(--bg); color:var(--ink); font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";}
-    a{color:var(--accent)}
+
+    /* Textos justificados de forma global (mantém centralizações pontuais por inline style) */
+    p, li { text-align: justify; }
+
+    a{color:var(--accent); text-decoration:none}
     .wrap{max-width:1100px; margin:0 auto; padding:16px}
     header{display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; padding:12px 0 6px 0;}
     .brand{display:flex; align-items:center; gap:12px}
     .brand h1{font-size: clamp(20px, 2.4vw, 28px); margin:0}
     .brand small{display:block; color:var(--muted); font-size:12px}
-    .toolbar{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
-    button, .btn{border:0; background:var(--accent); color:#073B3A; padding:10px 14px; border-radius:12px; box-shadow:var(--shadow); cursor:pointer; font-weight:600; letter-spacing:.2px;}
+
+    /* Toolbar simétrica */
+    .toolbar{display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap}
+    .pill{display:inline-flex; align-items:center; justify-content:center; gap:6px; background:#EAF6F3; padding:0 12px; border-radius:999px; font-weight:600; height:var(--btn-h); min-width:var(--btn-min)}
+    body.dark .pill{background:#1B2A2F}
+
+    /* Botões com dimensões e alinhamento iguais */
+    button, .btn, .btn-ghost, .btn-secondary, .btn-warn, .btn-ok{
+      display:inline-flex; align-items:center; justify-content:center;
+      height:var(--btn-h); min-width:var(--btn-min); padding:0 16px;
+      border:0; border-radius:12px; box-shadow:var(--shadow);
+      cursor:pointer; font-weight:700; letter-spacing:.25px;
+    }
+    .btn{background:var(--accent); color:#073B3A}
     .btn-secondary{background:var(--accent-2); color:#0A2C57}
     .btn-ghost{background:#E9F4F1; color:#074743}
     body.dark .btn-ghost{background:#1B2A2F; color:#CFE7E4}
     .btn-warn{background:var(--warn); color:#5A0101}
     .btn-ok{background:var(--ok); color:#053305}
+
     .icon{width:26px; height:26px; display:inline-block; vertical-align:middle}
+
+    /* Cartões com alturas consistentes; botões no rodapé do cartão */
     .grid{display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:14px;}
-    .card{background:var(--card); border-radius:var(--radius); padding:14px; box-shadow:var(--shadow)}
+    .card{background:var(--card); border-radius:var(--radius); padding:14px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:8px}
     .card h3{margin:6px 0 8px 0; font-size:18px}
     .card p{margin:4px 0; color:var(--muted)}
+    .grid .card .btn{width:100%; margin-top:auto}
+
     .plant-area{display:grid; grid-template-columns:1fr 1fr; gap:14px}
-    @media (max-width:920px){ .plant-area{grid-template-columns:1fr} }
+    @media (max-width:920px){ 
+      .plant-area{grid-template-columns:1fr}
+      header{justify-content:center}
+      .brand{justify-content:center}
+    }
+
     .meter{height:10px; background:#E6F1EF; border-radius:999px; overflow:hidden;}
     .meter>div{height:100%; background:linear-gradient(90deg, var(--accent), var(--accent-2)); width:0%; transition: width .6s ease}
-    .pill{display:inline-flex; align-items:center; gap:6px; background:#EAF6F3; padding:8px 12px; border-radius:999px; font-weight:600}
-    body.dark .pill{background:#1B2A2F}
     .section-title{display:flex; align-items:center; justify-content:space-between; margin:18px 0 8px 0}
     .subtle{color:var(--muted); font-size:14px}
 
@@ -82,14 +110,15 @@
     .timer .time{font-weight:800; font-size:44px; letter-spacing:1px}
     .progress{height:12px; width:100%; background:#E9F4F1; border-radius:999px; overflow:hidden}
     .progress>div{height:100%; width:0%; background:linear-gradient(90deg, var(--accent-2), var(--accent)); transition: width .3s linear}
+    /* Botões do modal alinhados e simétricos */
+    .timer .actions{display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; justify-content:center; width:100%}
+    .timer .actions button{flex:1 1 140px}
 
     /* Balão de Respiração (contraste calmo + expansão maior/menor) */
     .breath{
       width: 240px; height: 240px; border-radius:50%;
       background: radial-gradient(circle at 50% 50%, var(--breath-center) 0, var(--breath-center) 38%, var(--breath-ring) 100%);
-      box-shadow:
-        0 0 0 3px var(--breath-outline) inset,
-        var(--shadow);
+      box-shadow: 0 0 0 3px var(--breath-outline) inset, var(--shadow);
       display:grid; place-items:center; margin: 10px auto;
       animation: pulse 8s ease-in-out infinite;
     }
@@ -121,7 +150,7 @@
     .kbd{border:1px solid #d8e7e3; padding:2px 6px; border-radius:6px; background:#f6fbfa}
     body.dark .kbd{border-color:#244148; background:#14262B; color:#CDE3E0}
 
-    /* Justificar conteúdo do bloco “Sobre o medo de mudar” */
+    /* Justificar conteúdo do bloco “Sobre o medo de mudar” (já estava, mantido) */
     .justify{ text-align: justify; }
     .justify li{ text-align: justify; }
   </style>
@@ -171,7 +200,7 @@
           <div class="card" aria-label="Exercício de respiração box">
             <div class="breath" id="breathCircle" aria-hidden="true"></div>
             <div style="text-align:center">
-              <p id="breathCue" style="margin:6px 0; font-weight:700">Inspire (4)</p>
+              <p id="breathCue" style="margin:6px 0; font-weight:700; text-align:center">Inspire (4)</p>
               <button class="btn-ghost" id="breathStart">▶️ Iniciar respiração 4–4–4–4</button>
             </div>
           </div>
@@ -190,7 +219,7 @@
           </div>
 
           <div class="affirm" aria-label="Palavras suaves">
-            <p id="affirmText" style="margin:0; font-weight:600">Pequenos passos contam. Você não precisa sentir vontade para começar; a vontade aparece depois do primeiro passo.</p>
+            <p id="affirmText" style="margin:0; font-weight:600; text-align:justify">Pequenos passos contam. Você não precisa sentir vontade para começar; a vontade aparece depois do primeiro passo.</p>
           </div>
         </div>
       </section>
@@ -348,7 +377,7 @@
           <div class="time" id="time">00:00</div>
           <div class="progress"><div id="bar"></div></div>
           <div id="stepText" style="font-weight:700; text-align:center"></div>
-          <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; justify-content:center">
+          <div class="actions">
             <button id="startBtn" class="btn-ok">▶️ Iniciar</button>
             <button id="pauseBtn" class="btn-ghost">⏸️ Pausar</button>
             <button id="finishBtn" class="btn">✅ Concluir</button>
@@ -480,7 +509,6 @@
 
     function renderBubbles(){
       const c = $('#bubbles'); c.innerHTML='';
-      // Mantém as bolhas em ambos os modos; mais sutis no noturno via CSS
       for(let i=0;i<8;i++){
         const b = document.createElement('div');
         b.className='bubble';

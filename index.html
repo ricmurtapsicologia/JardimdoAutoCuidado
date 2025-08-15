@@ -18,7 +18,29 @@
       --ok:#A1E3A1;          /* sucesso suave */
       --shadow: 0 4px 18px rgba(0,0,0,.08);
       --radius: 16px;
+
+      /* Cores do balão de respiração (calmas e contrastantes) */
+      --breath-center:#FFFFFF;
+      --breath-ring:#CFEAFC;     /* azul bem calmo */
+      --breath-outline:#8ABFEF;  /* contraste suave */
     }
+
+    /* Tema Noturno (ativado via classe .dark no body) */
+    body.dark{
+      --bg:#0F1517;
+      --card:#121C20;
+      --ink:#E6F1F0;
+      --muted:#9CB3B2;
+      --accent:#5DB9A6;
+      --accent-2:#78B4FF;
+      --warn:#FF9E9E;
+      --ok:#7BD47B;
+
+      --breath-center:#162229;
+      --breath-ring:#265C80;
+      --breath-outline:#7FBDF0;
+    }
+
     *{box-sizing:border-box}
     html,body{margin:0; padding:0; background:var(--bg); color:var(--ink); font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";}
     a{color:var(--accent)}
@@ -31,6 +53,7 @@
     button, .btn{border:0; background:var(--accent); color:#073B3A; padding:10px 14px; border-radius:12px; box-shadow:var(--shadow); cursor:pointer; font-weight:600; letter-spacing:.2px;}
     .btn-secondary{background:var(--accent-2); color:#0A2C57}
     .btn-ghost{background:#E9F4F1; color:#074743}
+    body.dark .btn-ghost{background:#1B2A2F; color:#CFE7E4}
     .btn-warn{background:var(--warn); color:#5A0101}
     .btn-ok{background:var(--ok); color:#053305}
     .icon{width:26px; height:26px; display:inline-block; vertical-align:middle}
@@ -43,6 +66,7 @@
     .meter{height:10px; background:#E6F1EF; border-radius:999px; overflow:hidden;}
     .meter>div{height:100%; background:linear-gradient(90deg, var(--accent), var(--accent-2)); width:0%; transition: width .6s ease}
     .pill{display:inline-flex; align-items:center; gap:6px; background:#EAF6F3; padding:8px 12px; border-radius:999px; font-weight:600}
+    body.dark .pill{background:#1B2A2F}
     .section-title{display:flex; align-items:center; justify-content:space-between; margin:18px 0 8px 0}
     .subtle{color:var(--muted); font-size:14px}
 
@@ -51,6 +75,7 @@
     dialog::backdrop{background:rgba(0,0,0,.2)}
     .modal{background:var(--card); border-radius:18px; overflow:hidden}
     .modal header{padding:16px; border-bottom:1px solid #EEF3F2}
+    body.dark .modal header{border-bottom-color:#1E2A2E}
     .modal section{padding:18px}
 
     .timer{display:flex; flex-direction:column; align-items:center; gap:10px}
@@ -58,26 +83,47 @@
     .progress{height:12px; width:100%; background:#E9F4F1; border-radius:999px; overflow:hidden}
     .progress>div{height:100%; width:0%; background:linear-gradient(90deg, var(--accent-2), var(--accent)); transition: width .3s linear}
 
-    /* Breath circle */
-    .breath{width: 220px; height: 220px; border-radius:50%; background: radial-gradient(circle at 30% 30%, #FFFFFF 0, #FFFFFF 40%, #EAF6F3 100%); box-shadow: var(--shadow); display:grid; place-items:center; margin: 10px auto; animation: pulse 8s ease-in-out infinite;}
-    @keyframes pulse{0%,100%{transform: scale(1)} 50%{transform: scale(1.08)}}
+    /* Balão de Respiração (contraste calmo + expansão maior/menor) */
+    .breath{
+      width: 240px; height: 240px; border-radius:50%;
+      background: radial-gradient(circle at 50% 50%, var(--breath-center) 0, var(--breath-center) 38%, var(--breath-ring) 100%);
+      box-shadow:
+        0 0 0 3px var(--breath-outline) inset,
+        var(--shadow);
+      display:grid; place-items:center; margin: 10px auto;
+      animation: pulse 8s ease-in-out infinite;
+    }
+    @keyframes pulse{
+      0%   { transform: scale(0.92);   filter: saturate(0.95); }
+      50%  { transform: scale(1.12);   filter: saturate(1.05); }
+      100% { transform: scale(0.92);   filter: saturate(0.95); }
+    }
 
     .affirm{background:linear-gradient(180deg,#FEFFFF,#F3FBF9); padding:12px; border-radius:14px; border:1px dashed #D8EEE9}
+    body.dark .affirm{background:linear-gradient(180deg,#132028,#1A2E37); border-color:#23414A}
 
     .badge{display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:999px; background:#F0F7FF; color:#0F345C; font-weight:700}
     .badges{display:flex; gap:8px; flex-wrap:wrap}
 
     /* GARDEN */
     .garden{width:100%; height:300px; position:relative; border-radius:14px; overflow:hidden; background:linear-gradient(180deg,#F4FBF9 0%, #FFFFFF 50%, #EAF6F3 100%);} 
+    body.dark .garden{background:linear-gradient(180deg,#0F1B1E 0%, #0F1A1D 50%, #0F2226 100%);}
     .garden::after{content:""; position:absolute; inset:auto 0 0 0; height:46px; background:linear-gradient(180deg,#D6EFE7,#C7E9DF);}
+    body.dark .garden::after{background:linear-gradient(180deg,#13282E,#103038);}
     .flower{position:absolute; width:28px; height:28px; transform: translate(-50%,-50%) scale(.6); animation: pop .35s ease-out;}
     @keyframes pop{from{transform: translate(-50%,-50%) scale(.2); opacity:0} to{transform: translate(-50%,-50%) scale(.6); opacity:1}}
     .sky-bubbles{position:absolute; inset:0; opacity:.25; pointer-events:none}
     .bubble{position:absolute; bottom:-30px; width:10px; height:10px; background:#8EC5FF; border-radius:50%; animation: rise 12s linear infinite}
     @keyframes rise{ to{ transform: translateY(-120vh)} }
 
-    .footer{margin:24px 0; color:var(--muted); font-size:13px}
+    .footer{margin:24px 0; color:var(--muted); font-size:13px; text-align:center}
+    .signature{margin-top:6px; font-weight:700; color:var(--ink)}
     .kbd{border:1px solid #d8e7e3; padding:2px 6px; border-radius:6px; background:#f6fbfa}
+    body.dark .kbd{border-color:#244148; background:#14262B; color:#CDE3E0}
+
+    /* Justificar conteúdo do bloco “Sobre o medo de mudar” */
+    .justify{ text-align: justify; }
+    .justify li{ text-align: justify; }
   </style>
 </head>
 <body>
@@ -94,8 +140,10 @@
         <span class="pill" title="Seu progresso hoje"><span aria-hidden>⭐</span> <span id="stars">0</span> pontos</span>
         <span class="pill" title="Flores plantadas">🌼 <span id="flowerCount">0</span></span>
         <button id="muteBtn" class="btn-ghost" aria-pressed="false" aria-label="Alternar sons">🔈 Som</button>
-        <button id="safeBtn" class="btn-secondary" aria-pressed="false" aria-label="Ativar/Desativar Modo Seguro">🛡️ Modo Seguro: OFF</button>
-        <a class="btn-warn" href="tel:188" aria-label="Emergência emocional: ligar 188 (CVV)">❤️‍🩹 CVV 188</a>
+        <button id="nightBtn" class="btn-secondary" aria-pressed="false" aria-label="Ativar/Desativar Modo Noturno">🌙 Modo Noturno: OFF</button>
+        <a class="btn-warn" id="cvvBtn" href="tel:188" aria-label="Precisa de ajuda agora? Ligar 188 do CVV">
+          ❤️‍🩹 Precisa de ajuda agora? LIGAR 188 (CVV)
+        </a>
       </div>
     </header>
 
@@ -158,7 +206,7 @@
           <article class="card" role="listitem">
             <div class="badge" aria-hidden="true">🪥 Escovar dentes</div>
             <h3>Brilho rápido — 60s</h3>
-            <p>30s acima + 30s abaixo. Gentileza > perfeição.</p>
+            <p>30s acima + 30s abaixo. Gentileza &gt; perfeição.</p>
             <button class="btn" data-mission="dentes">Começar missão</button>
           </article>
           <article class="card" role="listitem">
@@ -260,9 +308,9 @@
 
       <section style="margin-top:16px">
         <div class="section-title">
-          <h2 style="margin:0">Sobre o medo de melhorar</h2>
+          <h2 style="margin:0">Sobre o medo de mudar</h2>
         </div>
-        <div class="card">
+        <div class="card justify">
           <p><strong>Ideia-chave:</strong> melhorar não significa ser abandonada. Seu valor não depende do que você faz hoje. As pessoas que importam querem você <em>viva e menos sobrecarregada</em>, um passo de cada vez.</p>
           <ul>
             <li><strong>Experimento gentil:</strong> faça 1 microação e observe: alguém deixa de gostar de você por isso? Registre a evidência.</li>
@@ -281,7 +329,9 @@
       </section>
 
       <p class="footer">
-        Este jogo é um apoio terapêutico e <strong>não substitui</strong> acompanhamento profissional. Em crise, ligue <strong>188 (CVV)</strong> ou procure o serviço de emergência. Seus dados ficam apenas no seu dispositivo (localStorage). <span class="kbd">Modo Seguro</span> reduz animações (não silencia o som). — v1.2
+        Este jogo é um apoio terapêutico e <strong>não substitui</strong> acompanhamento profissional. Em crise, toque em <strong id="cvvCtaInline">“LIGAR 188 (CVV)”</strong> acima para falar com alguém agora. Seus dados ficam apenas no seu dispositivo (localStorage). — v1.3
+        <br />
+        <span class="signature">Richelmy Murta, Psicólogo Clinico especialista em Terapia cognitivo comportamental.</span>
       </p>
     </main>
   </div>
@@ -322,7 +372,7 @@
     const state = {
       stars: 0,
       muted: false,
-      safe: false,
+      night: false,   // substitui "safe"
       badges: new Set(),
       doneToday: {},
       flowers: [], // {xPerc,yPerc,color}
@@ -334,12 +384,15 @@
 
     // Persistência simples
     const save = () => {
-      try { localStorage.setItem('jardim-julia', JSON.stringify({
-        stars: state.stars,
-        badges: [...state.badges],
-        doneToday: state.doneToday,
-        flowers: state.flowers,
-      })); } catch(e){}
+      try {
+        localStorage.setItem('jardim-julia', JSON.stringify({
+          stars: state.stars,
+          badges: [...state.badges],
+          doneToday: state.doneToday,
+          flowers: state.flowers,
+          night: state.night,
+        }));
+      } catch(e){}
     };
     const load = () => {
       try {
@@ -348,11 +401,13 @@
         state.badges = new Set(d.badges||[]);
         state.doneToday = d.doneToday||{};
         state.flowers = d.flowers||[];
+        state.night = !!d.night;
+        if(state.night) document.body.classList.add('dark');
       } catch(e){}
     };
 
     // ========= Áudio =========
-    let audioCtx, masterGain, tickInterval;
+    let audioCtx, masterGain;
     function ensureAudio(){
       try{
         if(!audioCtx){
@@ -373,16 +428,13 @@
       g.gain.value = 0.0001;
       o.connect(g).connect(masterGain);
       o.start();
-      // ataque/decay para clique nítido
       const now = audioCtx.currentTime;
       g.gain.exponentialRampToValueAtTime(vol, now + 0.01);
       g.gain.exponentialRampToValueAtTime(0.00001, now + dur);
       o.stop(now + dur + 0.02);
     }
 
-    function tick(){ // tic-tac
-      tone(900, 0.06, 'square', 0.18);
-    }
+    function tick(){ tone(900, 0.06, 'square', 0.18); }
 
     // Avisos suaves
     const affirmations = [
@@ -393,15 +445,13 @@
       'Você não está sozinha. Este passo já é coragem.',
       'Melhorar não significa perder; significa se acolher.',
     ];
-
     function setAffirm(){ $('#affirmText').textContent = affirmations[Math.floor(Math.random()*affirmations.length)]; }
 
-    // ========= Jardim (flores posicionadas no campo) =========
+    // ========= Jardim =========
     const COLORS = ['#FFDF7D','#FFD1E1','#D9C4FF','#BFF2D6','#FFE9A8','#FFC6A8'];
 
     function renderGarden(){
       const g = $('#garden');
-      // limpar flores e rebobinar
       g.querySelectorAll('.flower').forEach(el=>el.remove());
       state.flowers.forEach(f=>{
         const el = document.createElement('div');
@@ -420,7 +470,6 @@
     function addFlower(){
       const g = $('#garden');
       const rect = g.getBoundingClientRect();
-      // evitar bordas
       const margin = 8;
       const x = margin + Math.random()*(rect.width - margin*2);
       const y = margin + Math.random()*(rect.height - margin*2);
@@ -431,7 +480,7 @@
 
     function renderBubbles(){
       const c = $('#bubbles'); c.innerHTML='';
-      if(state.safe) return; // sem bolhas no modo seguro
+      // Mantém as bolhas em ambos os modos; mais sutis no noturno via CSS
       for(let i=0;i<8;i++){
         const b = document.createElement('div');
         b.className='bubble';
@@ -450,6 +499,11 @@
       renderBadges();
       renderGarden();
       renderBubbles();
+      // Atualiza botões
+      $('#nightBtn').textContent = state.night ? '🌙 Modo Noturno: ON' : '🌙 Modo Noturno: OFF';
+      $('#nightBtn').setAttribute('aria-pressed', String(state.night));
+      $('#muteBtn').textContent = state.muted? '🔇 Sem som' : '🔈 Som';
+      $('#muteBtn').setAttribute('aria-pressed', String(state.muted));
       save();
     }
 
@@ -532,9 +586,12 @@
       ensureAudio();
       clearInterval(timerInt); tone(740,.12);
       timerInt = setInterval(()=>{
-        // tic-tac no cronômetro
         tick();
-        if(stepRemain>0){ stepRemain--; elapsed++; $('#time').textContent = fmt(stepRemain); $('#bar').style.width = (elapsed/totalSecs*100)+'%'; }
+        if(stepRemain>0){
+          stepRemain--; elapsed++;
+          $('#time').textContent = fmt(stepRemain);
+          $('#bar').style.width = (elapsed/totalSecs*100)+'%';
+        }
         if(stepRemain===0){
           const m = missions[currentMission];
           if(stepIdx < m.steps.length-1){
@@ -551,9 +608,14 @@
     function finishMission(){
       clearInterval(timerInt);
       const m = missions[currentMission];
-      if(!state.doneToday[currentMission]){ addStars(m.points); state.doneToday[currentMission] = true; if(Object.keys(state.doneToday).length===1) state.badges.add('Dia Iniciado ✨'); }
-      else { addStars(1); }
-      addFlower(); // sempre planta uma flor
+      if(!state.doneToday[currentMission]){
+        addStars(m.points);
+        state.doneToday[currentMission] = true;
+        if(Object.keys(state.doneToday).length===1) state.badges.add('Dia Iniciado ✨');
+      } else {
+        addStars(1);
+      }
+      addFlower();
       save();
       $('#missionModal').close();
     }
@@ -574,19 +636,21 @@
       }
     }));
 
-    // ========= Modo Seguro & Mudo =========
+    // ========= Mudo & Noturno =========
     $('#muteBtn').addEventListener('click', ()=>{
       state.muted = !state.muted;
       $('#muteBtn').textContent = state.muted? '🔇 Sem som' : '🔈 Som';
       $('#muteBtn').setAttribute('aria-pressed', String(state.muted));
       if(!state.muted) ensureAudio();
+      save();
     });
 
-    $('#safeBtn').addEventListener('click', ()=>{
-      state.safe = !state.safe;
-      $('#safeBtn').textContent = state.safe? '🛡️ Modo Seguro: ON' : '🛡️ Modo Seguro: OFF';
-      $('#safeBtn').setAttribute('aria-pressed', String(state.safe));
-      renderBubbles();
+    $('#nightBtn').addEventListener('click', ()=>{
+      state.night = !state.night;
+      document.body.classList.toggle('dark', state.night);
+      $('#nightBtn').textContent = state.night? '🌙 Modo Noturno: ON' : '🌙 Modo Noturno: OFF';
+      $('#nightBtn').setAttribute('aria-pressed', String(state.night));
+      save();
     });
 
     // ========= Init =========
@@ -604,6 +668,10 @@
       alert('Bem-vinda, Júlia! Cada missão concluída planta uma flor no jardim. Vamos começar com uma microação? 🌼');
       localStorage.setItem('jardim-julia-welcome','1');
     }
+
+    // CTA inline do CVV acessível por teclado (foco/enter)
+    $('#cvvCtaInline')?.addEventListener('click', ()=>{ window.location.href = 'tel:188'; });
   </script>
 </body>
 </html>
+
